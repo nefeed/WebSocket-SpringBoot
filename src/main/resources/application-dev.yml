@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  context-path: /
+localConstant:
+  projectName: xbbDingtalkLocal
+jedis:
+  pool:
+    host: 192.168.10.5
+    port: 6379
+    timeout: 0
+    password: mUWPMPpWyv8I069o
+    config:
+      maxTotal: 30
+      maxIdle: 10
+      maxWaitMillis: 1500

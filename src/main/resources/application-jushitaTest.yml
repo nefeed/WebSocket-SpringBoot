@@ -1,0 +1,15 @@
+server:
+  port: 5051
+  context-path: /
+localConstant:
+  projectName: xbbDingtalkTest
+jedis:
+  pool:
+    host: 10.24.41.81
+    port: 6379
+    timeout: 0
+    password: mUWPMPpWyv8I069o
+    config:
+      maxTotal: 30
+      maxIdle: 10
+      maxWaitMillis: 1500

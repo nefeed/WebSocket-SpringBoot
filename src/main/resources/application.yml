@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: jushita
+  thymeleaf:
+    cache: false #关闭thymeleaf的缓存
+management:
+  security:
+    enabled: false
+  context-path: /manage
+logging:
+  config: classpath:log4j2.xml

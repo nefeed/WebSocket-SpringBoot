@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout charset="UTF-8">
+				<pattern>%d %p %C{1.} [%t] %m%n</pattern>
+			</PatternLayout>
+		</Console>
+		<!-- 按日期每天生成log文件 -->
+		<RollingFile name="ErrorRollingFile" fileName="./log/xbb-dingtalk-websocket/error.log"
+					 filePattern="./log/xbb-dingtalk-websocket/error-%d{yyyy-MM-dd}.log">
+			<PatternLayout charset="UTF-8" pattern="%d{MM-dd HH\:mm\:ss} %p %C{1.} [%t] %m%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"/>
+			</Policies>
+
+			<!-- log文件打印error级别信息 -->
+			<Filters>
+				<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+		</RollingFile>
+		<RollingFile name="WarnRollingFile" fileName="./log/xbb-dingtalk-websocket/warn.log"
+					 filePattern="./log/xbb-dingtalk-websocket/warn-%d{yyyy-MM-dd}.log">
+			<PatternLayout charset="UTF-8" pattern="%d{MM-dd HH\:mm\:ss} %p %C{1.} [%t] %m%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"/>
+			</Policies>
+
+			<!-- log文件打印warn级别信息 -->
+			<Filters>
+				<ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+		</RollingFile>
+		<RollingFile name="InfoRollingFile" fileName="./log/xbb-dingtalk-websocket/info.log"
+					 filePattern="./log/xbb-dingtalk-websocket/info-%d{yyyy-MM-dd}.log">
+			<PatternLayout charset="UTF-8" pattern="%d{MM-dd HH\:mm\:ss} %p %C{1.} [%t] %m%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"/>
+			</Policies>
+
+			<!-- log文件打印info级别信息 -->
+			<Filters>
+				<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<!-- 输出info级别信息 -->
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+			<!--<AppenderRef ref="File" />-->
+		</Root>
+	</Loggers>
+</Configuration>
