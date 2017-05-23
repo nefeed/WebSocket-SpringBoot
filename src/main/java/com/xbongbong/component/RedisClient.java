@@ -36,7 +36,9 @@ public class RedisClient {
             jedis.set(subUserHashKey, value);
         } finally {
             //返还到连接池
-            jedis.close();
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 
@@ -48,7 +50,9 @@ public class RedisClient {
             return jedis.get(subUserHashKey);
         } finally {
             //返还到连接池
-            jedis.close();
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 
@@ -60,7 +64,9 @@ public class RedisClient {
             return jedis.lpush(subUserHashKey, value);
         } finally {
             //返还到连接池
-            jedis.close();
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 
@@ -81,7 +87,9 @@ public class RedisClient {
             }
         } finally {
             //返还到连接池
-            jedis.close();
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 
@@ -93,7 +101,9 @@ public class RedisClient {
             return jedis.rpop(subUserHashKey);
         } finally {
             //返还到连接池
-            jedis.close();
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 
@@ -106,7 +116,9 @@ public class RedisClient {
             return jedis.rpoplpush(subUserHashPopKey, subUserHashPushKey);
         } finally {
             //返还到连接池
-            jedis.close();
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 
@@ -118,7 +130,9 @@ public class RedisClient {
             return jedis.llen(subUserHashKey);
         } finally {
             //返还到连接池
-            jedis.close();
+            if (jedis != null) {
+                jedis.close();
+            }
         }
     }
 
