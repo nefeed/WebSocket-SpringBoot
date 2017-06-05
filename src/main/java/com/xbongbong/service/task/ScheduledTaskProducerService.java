@@ -7,17 +7,12 @@ import com.xbongbong.entity.UnicastMessageEntity;
 import com.xbongbong.socket.XbbWebSocket;
 import com.xbongbong.util.DateUtil;
 import com.xbongbong.util.ExceptionUtil;
-import com.xbongbong.util.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * User: Gavin
@@ -36,6 +31,8 @@ public class ScheduledTaskProducerService {
     private static final Logger LOG = LogManager
             .getLogger(ScheduledTaskProducerService.class);
 
+    private int index = 0;
+
     @Autowired
     private RedisClient redisClient;
 
@@ -44,30 +41,9 @@ public class ScheduledTaskProducerService {
         return new XbbWebSocket();
     }
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-//    @Scheduled(fixedRate = 3000)
-//    public void reportCurrentTime() throws Exception {
-//        LOG.info(" 每隔三秒执行一次：" + dateFormat.format(new Date()));
-//        pushTask2Jedis(" 每隔五秒执行一次：" + dateFormat.format(new Date()));
-//    }
-
-//    @Scheduled(fixedRate = 5000)
-//    public void popRedisData() throws Exception {
-//        LOG.info(" 每隔五秒执行一次：" + dateFormat.format(new Date()));
-//        String popMessage = popTask4Jedis();
-//        if (StringUtil.isEmpty(popMessage)) {
-//            return;
-//        }
-//        LOG.info(popMessage);
-//        webSocket().sendInfo(popMessage);
-//    }
-
-    private int index = 0;
-
     @Scheduled(fixedRate = 150)
     public void popUnicastMessage() {
-//        LOG.info(" 每隔0.15执行一次：" + dateFormat.format(new Date()));
+        // 0.15s执行一次
         pushUnicastMessage();
         if ((++index) % 400 == 0) { // 每60秒输出一次当前用户和工作队列信息
             webSocket().showOnlineUserNum();
@@ -92,41 +68,6 @@ public class ScheduledTaskProducerService {
 //        LOG.info(popMessage);
 //    }
 
-    private void pushTask2Jedis(String message) {
-        // 模拟生成一个任务
-        UUID taskid = UUID.randomUUID();
-        //将任务插入任务队列：socket-task-queue
-        try {
-            redisClient.lpush(REDIS_WORK_ARRAY_KEY, "message -> " + message + "；" + taskid.toString());
-            LOG.info("插入了一个新的任务： " + "message -> " + message + "；" + taskid);
-        } catch (Exception e) {
-            LOG.error("捕获插入 Redis 时异常！异常内容：" + ExceptionUtil.getStackMsg(e));
-        }
-    }
-
-    private String popTask4Jedis() throws Exception {
-        Random random = new Random();
-        //从任务队列"socket-task-queue"中获取一个任务，并将该任务放入暂存队列"socket-tmp-queue"
-        String uniCastMessageJsonStr = redisClient.rpoplpush(REDIS_WORK_ARRAY_KEY, REDIS_TEMP_ARRAY_KEY);
-        // 处理任务----纯属业务逻辑，模拟一下：睡觉
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        //模拟成功和失败的偶然现象
-        if (random.nextInt(13) % 7 == 0) {// 模拟失败的情况,概率为2/13
-            //将本次处理失败的任务从暂存队列"socket-tmp-queue"中，弹回任务队列"socket-task-queue"
-            LOG.error(uniCastMessageJsonStr + "处理失败，被弹回任务队列");
-            redisClient.rpoplpush(REDIS_TEMP_ARRAY_KEY, REDIS_WORK_ARRAY_KEY);
-            return null;
-        } else {// 模拟成功的情况
-            // 将本次任务从暂存队列"socket-tmp-queue"中清除
-            LOG.info(uniCastMessageJsonStr + "处理成功，被清除");
-            return redisClient.rpop(REDIS_TEMP_ARRAY_KEY);
-        }
-    }
-
     /**
      * 发送单播信息
      *
@@ -140,7 +81,7 @@ public class ScheduledTaskProducerService {
         } catch (Exception e) {
             LOG.error("捕获从 Redis 工作队列读取消息做处理准备时异常！异常内容：" + ExceptionUtil.getStackMsg(e));
         }
-        if (StringUtil.isEmpty(messageJsonStr)
+        if (messageJsonStr == null
                 || !(messageJsonStr.startsWith("{") && messageJsonStr.endsWith("}"))) {
 //            LOG.info("空信息，丢弃：" + messageJsonStr);
             return;

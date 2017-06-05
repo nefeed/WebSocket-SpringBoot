@@ -3,8 +3,6 @@ package com.xbongbong.model;
 
 import com.xbongbong.base.BaseModel;
 
-import java.io.Serializable;
-
 /**
  * User: Gavin
  * E-mail: GavinChangCN@163.com
@@ -12,9 +10,8 @@ import java.io.Serializable;
  * Date: 2017-03-07
  * Time: 17:45
  */
-public class ResponseModal extends BaseModel implements Serializable {
+public class ResponseModal extends BaseModel {
 
-    private static final long serialVersionUID = 1L;
 
     public ResponseModal(){
         super();

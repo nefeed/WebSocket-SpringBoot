@@ -55,9 +55,15 @@ public class SocketIdCardEntity implements Serializable {
         this.platform = platform;
     }
 
-    public boolean equals(SocketIdCardEntity another) {
-        return (!StringUtil.isEmpty(this.getCorpid()) && this.getCorpid().equals(another.getCorpid()))
-                && (!StringUtil.isEmpty(this.getUserId()) && this.getUserId().equals(another.getUserId()))
-                && (!StringUtil.isEmpty(this.getPlatform()) && this.getPlatform().equals(another.getPlatform()));
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SocketIdCardEntity) {
+            SocketIdCardEntity another = (SocketIdCardEntity) obj;
+            return (!StringUtil.isEmpty(this.getCorpid()) && this.getCorpid().equals(another.getCorpid()))
+                    && (!StringUtil.isEmpty(this.getUserId()) && this.getUserId().equals(another.getUserId()))
+                    && (!StringUtil.isEmpty(this.getPlatform()) && this.getPlatform().equals(another.getPlatform()));
+        } else {
+            return false;
+        }
     }
 }
